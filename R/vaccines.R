@@ -17,5 +17,6 @@ sum(is.na(covid$longitude))
 sum(is.na(flu$latitude))
 sum(is.na(flu$longitude))
 
+# Missing lat, long values
 covid %>%
   filter(is.na(latitude))
