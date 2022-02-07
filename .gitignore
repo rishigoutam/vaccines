@@ -37,6 +37,8 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# macOS
 .DS_Store
 
 # IntelliJ
