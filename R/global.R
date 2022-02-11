@@ -89,4 +89,4 @@ covid <- covid %>%
 #' TODO
 #' Temporarily filter covid by zip
 covid <- covid %>%
-  filter(loc_admin_zip == "98604")
+  filter(zip %in% c("98604", "98101", "11225", "19607"))
