@@ -8,13 +8,22 @@ library(dialr)
 
 setwd("~/vaccines/R")
 
+DEBUG <- TRUE
+
 # Load data ---------------------------------------------------------------
+
 
 covid <- read_csv("../data/Vaccines.gov__COVID-19_vaccinating_provider_locations.csv")
 
+# NYTimes Covid 19 data: https://github.com/nytimes/covid-19-data
+masks <- read_csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv")
+
+# https://www.doh.wa.gov/Emergencies/COVID19/DataDashboard#dashboard
+#
+
 # Data Cleaning -----------------------------------------------------------
 
-# Select useful columns and rename them
+## Select/rename columns --------------------------------------------------
 covid <- covid %>%
   select(c(location_guid="provider_location_guid",
            phone="loc_phone",
@@ -35,7 +44,7 @@ covid <- covid %>%
            # category="Category"             # covid or seasonal. all are covid for covid. TODO keeping if we want to check against flu dataset
   ))
 
-## Basic Cleaning
+## Basic Cleaning ---------------------------------------------------------
 # 39 covid vaccine locations missing lat, long -> drop them
 # zip is not provided for some providers -> remove these and only store short zip
 # change street names to uppercase
@@ -47,7 +56,7 @@ covid <- covid %>%
   filter(zip != ".") %>%
   mutate(zip = as.numeric(str_extract(zip, "[0-9]+")))    # get only first five digits of zip
 
-# # Clean vaccine type and availability -----------------------------------
+## Clean vaccine type and availability -----------------------------------
 
 
 # a provider location can have 3 (plus 1 for 5-11yr) types of vaccines but we
@@ -94,11 +103,13 @@ covid <- covid %>%
 covid <- covid %>%
   pivot_wider(names_from = med_name, values_from = in_stock)
 
-# -------------------------------------------------------------------------
+## Format phone numbers----------------------------------------------------
 
-# format phone numbers. Note: this can take a minute or two to run!
-phone_nums <- phone(covid$phone, "US")
-covid$phone <- format(phone_nums, format = "NATIONAL", clean = FALSE)
+# Note: this can take a minute or two to run!
+if (!DEBUG) {
+  phone_nums <- phone(covid$phone, "US")
+  covid$phone <- format(phone_nums, format = "NATIONAL", clean = FALSE)
+}
 
 #' TODO
 #' Temporarily filter covid by zip
