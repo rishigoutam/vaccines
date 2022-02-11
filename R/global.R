@@ -5,21 +5,28 @@ library(tidyverse)
 library(DT)
 library(leaflet)
 library(dialr)
-library(rgdal)
 
 setwd("~/vaccines/R")
 
-DEBUG <- TRUE
+DEBUG <- FALSE
+USE_AWS <- FALSE
 
 # Load data ---------------------------------------------------------------
 
 # CDC covid vaccine provider locations
 # https://data.cdc.gov/Vaccinations/Vaccines-gov-COVID-19-vaccinating-provider-locatio/5jp2-pgaw
-covid <- read_csv("../data/Vaccines.gov__COVID-19_vaccinating_provider_locations.csv")
+if (USE_AWS) {
+  library(aws.s3)
+  covid <- s3read_using(FUN = read_csv,
+                        bucket = 'awsgoutamorg-bucket',
+                        object = 'Vaccines.gov__COVID-19_vaccinating_provider_locations.csv')
+} else {
+  covid <- read_csv("../data/Vaccines.gov__COVID-19_vaccinating_provider_locations.csv")
+}
 
 # NYTimes Covid 19 data
 # https://github.com/nytimes/covid-19-data
-masks <- read_csv("../data/mask-use-by-county.csv")
+# masks <- read_csv("../data/mask-use-by-county.csv")
 
 # WA DOH Dashboard
 # https://www.doh.wa.gov/Emergencies/COVID19/DataDashboard#dashboard
@@ -123,7 +130,9 @@ if (!DEBUG) {
 
 #' TODO
 #' Temporarily filter covid by zip
-covid <- covid %>%
-  filter(zip %in% c("98604", "98101", "11225", "19607"))
+if (DEBUG) {
+  covid <- covid %>%
+    filter(zip %in% c("98604", "98101", "11225", "19607"))
+}
 
 
