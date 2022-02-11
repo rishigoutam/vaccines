@@ -2,9 +2,21 @@ setwd("~/vaccines/R")
 library(tidyverse)
 
 covid <- tbl_df(read.csv("../data/Vaccines.gov__COVID-19_vaccinating_provider_locations.csv"))
-flu <- tbl_df(read.csv("../data/Vaccines.gov__Flu_vaccinating_provider_locations.csv"))
-both <- inner_join(flu, covid, by = "provider_location_guid") # TODO fix cols
-View(both)
+# flu <- tbl_df(read.csv("../data/Vaccines.gov__Flu_vaccinating_provider_locations.csv"))
+# both <- inner_join(flu, covid, by = "provider_location_guid") # TODO fix cols
+# View(both)
+
+# TODO
+# reactive funcs
+# observables
+# csv -> sql and connect
+# shinyapp.io vs local
+#
+# R:
+# leaflet
+# dplyr + ggplot visuals
+# basic stats
+# lm ????
 
 covid$latitude <- as.numeric(covid$latitude)
 covid$longitude <- as.numeric(covid$longitude)
@@ -20,3 +32,9 @@ sum(is.na(flu$longitude))
 # Missing lat, long values
 covid %>%
   filter(is.na(latitude))
+
+colnames(covid)
+head(covid)
+
+covid_cols <- c("provider_location_guid", "loc_phone", )
+
