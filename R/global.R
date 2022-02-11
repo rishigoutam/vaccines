@@ -5,6 +5,7 @@ library(tidyverse)
 library(DT)
 library(leaflet)
 library(dialr)
+library(rgdal)
 
 setwd("~/vaccines/R")
 
@@ -22,6 +23,13 @@ masks <- read_csv("../data/mask-use-by-county.csv")
 
 # WA DOH Dashboard
 # https://www.doh.wa.gov/Emergencies/COVID19/DataDashboard#dashboard
+
+# GeoJSON
+# http://eric.clst.org/Stuff/USGeoJSON
+counties <- rgdal::readOGR("../data/gz_2010_us_050_00_5m.json")
+states <- rgdal::readOGR("../data/gz_2010_us_040_00_5m.json")
+outline <- rgdal::readOGR("../data/gz_2010_us_outline_5m.json")
+
 
 # Data Cleaning -----------------------------------------------------------
 
@@ -117,6 +125,5 @@ if (!DEBUG) {
 #' Temporarily filter covid by zip
 covid <- covid %>%
   filter(zip %in% c("98604", "98101", "11225", "19607"))
-
 
 
