@@ -115,3 +115,16 @@ if (!DEBUG) {
 #' Temporarily filter covid by zip
 covid <- covid %>%
   filter(zip %in% c("98604", "98101", "11225", "19607"))
+
+
+# Create hover info for each provider -------------------------------------
+
+covid <- covid %>%
+  mutate(provider_popup = str_glue(.na = "",
+                    '<strong>Name: </strong>{name}',
+                    '<br><strong>Address: </strong>',
+                    '<pre>  </pre><br>{street1} {street2}',
+                    '<pre>  </pre><br>{city}, {state} {zip}',
+                    '<br><strong>Phone: </strong>{phone}',
+                    '<br><strong>In Stock: </strong>{ifelse (any(Moderna, Pfizer, Pfizer_child, Janssen), "Yes", "No")}',
+                    '<br><strong>Walk-Ins Allowed: </strong>{ifelse (walkins_accepted, "Yes", "No")}'))
