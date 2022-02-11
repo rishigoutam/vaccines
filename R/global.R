@@ -70,7 +70,7 @@ covid <- covid %>%
   mutate(med_name = case_when(
                               str_detect(med_name,'Moderna') ~ 'Moderna',
                               str_detect(med_name,'Janssen') ~ 'Janssen',
-                              str_detect(med_name,'(10 mcg)') ~ 'Pfizer (5-11)',
+                              str_detect(med_name,'(10 mcg)') ~ 'Pfizer_child',
                               str_detect(med_name,'(30 mcg)|(3 mcg)') ~ 'Pfizer'))
 
 # now we have squashed multiple vaccine types into the real types for each provider but could have duplicate rows
@@ -81,11 +81,10 @@ covid <- covid %>%
   mutate(in_stock = any(in_stock)) %>%
   distinct()
 
-covid %>%
-  extract(med_name, c("Janssen", "Moderna", "Pfizer"), "(Janssen)|(Moderna)|(Pfizer)", convert = TRUE) %>%
-  filter(moderna!="Moderna" & pfizer!="Pfizer" & jj !="Janssen")
-
-sapply(c(TRUE, FALSE, TRUE), )
+# now we should put our data in tidy data format where each row is a single provider location
+# we currently have redundant data and are only seeing what vaccine types are in stock
+covid <- covid %>%
+  pivot_wider(names_from = med_name, values_from = in_stock)
 
 #' TODO
 #' Temporarily filter covid by zip
