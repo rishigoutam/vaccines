@@ -29,7 +29,8 @@ covid <- covid %>%
                                              # 1 -> <1 day supply; 3 -> 1-2 day supply; 4 -> >2 day supply
            "latitude",
            "longitude",
-           category="Category"))             # covid or seasonal. all are covid for covid. TODO keeping if we want to check against flu dataset
+           # category="Category"             # covid or seasonal. all are covid for covid. TODO keeping if we want to check against flu dataset
+           ))
 
 # 39 covid vaccine locations missing lat, long
 # zip is not provided for some
@@ -46,6 +47,7 @@ covid <- covid %>%
 # a provider location can have 3 (plus 1 for 5-11yr) types of vaccines but we see
 # 10 types based on dosage in our dataset
 # pfizer is approved for 5-11 and 12+ so is the only vaccine for children in our data at this point in time
+# https://healthy.kaiserpermanente.org/pages/search?query=Pfizer-BioNTech%20COVID-19%20Vaccine&category=Drugs&global_region=All&language=English&binning-state=dose_form%3D%3DSuspension%20for%20reconstitution%0Aregion_label%3D%3DAll
 
 # med_name                                                       `n()`
 #   1 Janssen, COVID-19 Vaccine, 0.5 mL                              53496
@@ -68,13 +70,22 @@ covid <- covid %>%
   mutate(med_name = case_when(
                               str_detect(med_name,'Moderna') ~ 'Moderna',
                               str_detect(med_name,'Janssen') ~ 'Janssen',
-                              str_detect(med_name,'(10 mcg)') ~ 'Pfizer-BioNTech (5-11)',
-                              str_detect(med_name,'(30 mcg)|(3 mcg)') ~ 'Pfizer-BioNTech'))
+                              str_detect(med_name,'(10 mcg)') ~ 'Pfizer (5-11)',
+                              str_detect(med_name,'(30 mcg)|(3 mcg)') ~ 'Pfizer'))
+
+# now we have squashed multiple vaccine types into the real types for each provider but could have duplicate rows
+# the in_stock is the only value that could be different between rows. this should be whether any
+# of the vaccine types are in stock
+covid <- covid %>%
+  group_by(location_guid, med_name) %>%
+  mutate(in_stock = any(in_stock)) %>%
+  distinct()
 
 covid %>%
-  extract(med_name, c("jj", "moderna", "pfizer"), "(Janssen)|(Moderna)|(Pfizer)", convert = TRUE) %>%
+  extract(med_name, c("Janssen", "Moderna", "Pfizer"), "(Janssen)|(Moderna)|(Pfizer)", convert = TRUE) %>%
   filter(moderna!="Moderna" & pfizer!="Pfizer" & jj !="Janssen")
 
+sapply(c(TRUE, FALSE, TRUE), )
 
 #' TODO
 #' Temporarily filter covid by zip
@@ -83,5 +94,3 @@ covid <- covid %>%
 
 covid$latitude <- as.numeric(covid$latitude)
 covid$longitude <- as.numeric(covid$longitude)
-
-
