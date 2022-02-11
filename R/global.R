@@ -90,6 +90,3 @@ covid <- covid %>%
 #' Temporarily filter covid by zip
 covid <- covid %>%
   filter(loc_admin_zip == "98604")
-
-covid$latitude <- as.numeric(covid$latitude)
-covid$longitude <- as.numeric(covid$longitude)
