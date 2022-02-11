@@ -12,14 +12,13 @@ DEBUG <- TRUE
 
 # Load data ---------------------------------------------------------------
 
-
+# CDC covid vaccine provider locations
 covid <- read_csv("../data/Vaccines.gov__COVID-19_vaccinating_provider_locations.csv")
 
 # NYTimes Covid 19 data: https://github.com/nytimes/covid-19-data
-masks <- read_csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/mask-use/mask-use-by-county.csv")
+masks <- read_csv("../data/mask-use-by-county.csv")
 
 # https://www.doh.wa.gov/Emergencies/COVID19/DataDashboard#dashboard
-#
 
 # Data Cleaning -----------------------------------------------------------
 
