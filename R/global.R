@@ -2,24 +2,86 @@ library(shiny)
 library(tidyverse)
 library(DT)
 library(leaflet)
+
 setwd("~/vaccines/R")
-covid <- tbl_df(read.csv("../data/Vaccines.gov__COVID-19_vaccinating_provider_locations.csv", stringsAsFactors = FALSE))
-flu <- tbl_df(read.csv("../data/Vaccines.gov__Flu_vaccinating_provider_locations.csv", stringsAsFactors = FALSE))
 
-covid$latitude <- as.numeric(covid$latitude)
-covid$longitude <- as.numeric(covid$longitude)
+### Datasets ###
 
-# Data Cleaning
+covid <- read_csv("../data/Vaccines.gov__COVID-19_vaccinating_provider_locations.csv")
+
+### Data Cleaning ###
+
+# Select useful columns and rename
+covid <- covid %>%
+  select(c(location_guid="provider_location_guid",
+           phone="loc_phone",
+           name="loc_name",
+           street1="loc_admin_street1",
+           street2="loc_admin_street2",
+           city="loc_admin_city",
+           state="loc_admin_state",
+           zip="loc_admin_zip",              # keep 5 digits only
+           "insurance_accepted",             # boolean
+           "walkins_accepted",               # boolean
+           "med_name",                       # Moderna, Pfizer, J&J
+           "in_stock",                       # boolean
+           # "supply_level",                   # -1 -> No report; 0 -> No supply;
+                                             # 1 -> <1 day supply; 3 -> 1-2 day supply; 4 -> >2 day supply
+           "latitude",
+           "longitude",
+           category="Category"))             # covid or seasonal. all are covid for covid. TODO keeping if we want to check against flu dataset
 
 # 39 covid vaccine locations missing lat, long
+# zip is not provided for some
 covid <- covid %>%
-  drop_na(c('longitude', 'latitude'))
-# 32 flu vaccine locations missing lat, long
-flu <- flu %>%
-  drop_na(c('longitude', 'latitude'))
+  drop_na(c('longitude', 'latitude')) %>%
+  mutate(street1 = str_to_title(street1)) %>%
+  mutate(street2 = str_to_title(street2)) %>%
+  mutate(city = str_to_title(city)) %>%
+  filter(zip != ".") %>%
+  mutate(zip = as.numeric(str_extract(zip, "[0-9]+")))    # get only first five digits of zip
+
+# med_name cleanup
+
+# a provider location can have 3 (plus 1 for 5-11yr) types of vaccines but we see
+# 10 types based on dosage in our dataset
+# pfizer is approved for 5-11 and 12+ so is the only vaccine for children in our data at this point in time
+
+# med_name                                                       `n()`
+#   1 Janssen, COVID-19 Vaccine, 0.5 mL                              53496
+#
+# 2 Moderna, COVID-19 Vaccine, 100mcg/0.5mL                           34        # merge into below
+# 3 Moderna, COVID-19 Vaccine, 100mcg/0.5mL 10 dose                56323        # moderna 10 doses/5.5mL vial
+# 4 Moderna, COVID-19 Vaccine, 100mcg/0.5mL 10 doses                 863        # merge into above
+# 5 Moderna, COVID-19 Vaccine, 100mcg/0.5mL 14 dose                45389        # moderna 14 doses/7.5mL vial.
+                                                                                # all moderna vaccines are the same
+
+# 6 Pfizer-BioNTech, COVID-19 Vaccine, 10 mcg/0.2 mL, tris-sucrose 47424        # 5-11yr old (orange) (new formulation)
+# 7 Pfizer-BioNTech, COVID-19 Vaccine, 3 mcg/0.2 mL, tris-sucrose    775        # typo merge with 12+ (new)
+# 8 Pfizer-BioNTech, COVID-19 Vaccine, 30 mcg/0.3mL                55566        # 12+ (old formulation)
+# 9 Pfizer-BioNTech, COVID-19 Vaccine, 30 mcg/0.3mL, tris-sucrose  29554        # 12+ (new formulation)
+# 10 Pfizer, COVID-19 Vaccine, 30 mcg/0.3mL                           18        # typo merge with 12+ (old)
+                                                                                # we don't care about new/old formulation for pfizer so just separate 12+  from 5-11
+
+# let's rename the vaccine name as per above
+covid <- covid %>%
+  mutate(med_name = case_when(
+                              str_detect(med_name,'Moderna') ~ 'Moderna',
+                              str_detect(med_name,'Janssen') ~ 'Janssen',
+                              str_detect(med_name,'(10 mcg)') ~ 'Pfizer-BioNTech (5-11)',
+                              str_detect(med_name,'(30 mcg)|(3 mcg)') ~ 'Pfizer-BioNTech'))
+
+covid %>%
+  extract(med_name, c("jj", "moderna", "pfizer"), "(Janssen)|(Moderna)|(Pfizer)", convert = TRUE) %>%
+  filter(moderna!="Moderna" & pfizer!="Pfizer" & jj !="Janssen")
+
 
 #' TODO
 #' Temporarily filter covid by zip
 covid <- covid %>%
   filter(loc_admin_zip == "98604")
+
+covid$latitude <- as.numeric(covid$latitude)
+covid$longitude <- as.numeric(covid$longitude)
+
 
