@@ -1,4 +1,4 @@
-shinyServer(function(input, output) {
+function(input, output) {
 
   # Leaflet map
   output$cfmap <- renderLeaflet({
@@ -23,4 +23,4 @@ shinyServer(function(input, output) {
   filter = 'top',
   rownames = FALSE,
   colnames = c("Vaccine Provider", "City", "State", "ZIP", "Phone No.", "Accepts Insurance", "Walk-Ins Allowed", "Moderna (18+) In Stock", "Pfizer (12+) In Stock", "Pfizer (5-11) In Stock", "J&J Janssen (18+) In Stock"))
-})
+}
