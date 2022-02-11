@@ -13,8 +13,8 @@ function(input, output) {
            '<br><span>Moderna (18+): <span>{ifelse (Moderna, "Yes", "No")}</span>',
            '<br><span>Pfizer (12+): <span>{ifelse(Pfizer, "Yes", "No")}</span>',
            '<br><span>Pfizer (5-11): <span>{ifelse (Pfizer_child, "Yes", "No")}</span></div>',
-           '<br><strong>Insurance Accepted: </strong>{ifelse (insurance_accepted, "Yes", "No")}',
-           '<br><strong>Walk-Ins Allowed: </strong>{ifelse (walkins_accepted, "Yes", "No")}',
+           '<br><strong>Insurance Accepted: </strong>{ifelse (!is.na(insurance_accepted) & insurance_accepted, "Yes", "No")}',
+           '<br><strong>Walk-Ins Allowed: </strong>{ifelse (!is.na(walkins_accepted) & walkins_accepted, "Yes", "No")}',
           '</div>'))
 
   # Leaflet map

@@ -7,7 +7,7 @@ dashboardPage(
     tabsetPanel(
       tabPanel("Map", leafletOutput("cfmap", height = 600)),
       tabPanel("Data", DT::dataTableOutput("covid")),
-      tabPanel("About", includeMarkdown("../README.md"))
+      tabPanel("About", includeMarkdown("./README.md"))
       )
     )
 )

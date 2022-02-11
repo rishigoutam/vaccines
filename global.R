@@ -6,7 +6,7 @@ library(DT)
 library(leaflet)
 library(dialr)
 
-setwd("~/vaccines/R")
+setwd("~/vaccines")
 
 DEBUG <- FALSE
 USE_AWS <- FALSE
@@ -21,21 +21,21 @@ if (USE_AWS) {
                         bucket = 'awsgoutamorg-bucket',
                         object = 'Vaccines.gov__COVID-19_vaccinating_provider_locations.csv')
 } else {
-  covid <- read_csv("../data/Vaccines.gov__COVID-19_vaccinating_provider_locations.csv")
+  covid <- read_csv("./data/Vaccines.gov__COVID-19_vaccinating_provider_locations.csv")
 }
 
 # NYTimes Covid 19 data
 # https://github.com/nytimes/covid-19-data
-# masks <- read_csv("../data/mask-use-by-county.csv")
+# masks <- read_csv("./data/mask-use-by-county.csv")
 
 # WA DOH Dashboard
 # https://www.doh.wa.gov/Emergencies/COVID19/DataDashboard#dashboard
 
 # GeoJSON
 # http://eric.clst.org/Stuff/USGeoJSON
-counties <- rgdal::readOGR("../data/gz_2010_us_050_00_5m.json")
-states <- rgdal::readOGR("../data/gz_2010_us_040_00_5m.json")
-outline <- rgdal::readOGR("../data/gz_2010_us_outline_5m.json")
+# counties <- rgdal::readOGR("./data/gz_2010_us_050_00_5m.json")
+# states <- rgdal::readOGR("./data/gz_2010_us_040_00_5m.json")
+# outline <- rgdal::readOGR("./data/gz_2010_us_outline_5m.json")
 
 
 # Data Cleaning -----------------------------------------------------------
