@@ -3,7 +3,7 @@ function(input, output) {
   covid <- covid %>%
     mutate(provider_popup = str_glue(.na = "",
           '<div class="popup">',
-           '<strong>Name: </strong>{name}',
+           '<div class="name"><strong>Name: </strong><br>{name}</div>',
            '<div class="address"><br><strong>Address: </strong>',
            '<br>{street1} {street2}',
            '<br>{city}, {state} {zip}</div>',
@@ -13,6 +13,7 @@ function(input, output) {
            '<br><span>Moderna (18+): <span>{ifelse (Moderna, "Yes", "No")}</span>',
            '<br><span>Pfizer (12+): <span>{ifelse(Pfizer, "Yes", "No")}</span>',
            '<br><span>Pfizer (5-11): <span>{ifelse (Pfizer_child, "Yes", "No")}</span></div>',
+           '<br><strong>Insurance Accepted: </strong>{ifelse (insurance_accepted, "Yes", "No")}',
            '<br><strong>Walk-Ins Allowed: </strong>{ifelse (walkins_accepted, "Yes", "No")}',
           '</div>'))
 
@@ -43,4 +44,3 @@ function(input, output) {
                "Moderna (18+) In Stock", "Pfizer (12+) In Stock",
                "Pfizer (5-11) In Stock", "J&J Janssen (18+) In Stock"))
 }
-
