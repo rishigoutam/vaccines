@@ -1,22 +1,4 @@
 function(input, output) {
-  # Create popup information column to display on the map for each vaccine provider
-  covid <- covid %>%
-    mutate(provider_popup = str_glue(.na = "",
-          '<div class="popup">',
-           '<div class="name"><strong>Name: </strong><br>{name}</div>',
-           '<div class="address"><br><strong>Address: </strong>',
-           '<br>{street1} {street2}',
-           '<br>{city}, {state} {zip}</div>',
-           '<br><strong>Phone: </strong>{phone}',
-           '<div class = "stock"><br><strong>In Stock: </strong>',
-           '<span><br>J&J Janssen (18+): </span><span>{ifelse(!is.na(Janssen) & Janssen, "Yes", "No")}</span>',
-           '<br><span>Moderna (18+): <span>{ifelse (!is.na(Moderna) & Moderna, "Yes", "No")}</span>',
-           '<br><span>Pfizer (12+): <span>{ifelse(!is.na(Pfizer) & Pfizer, "Yes", "No")}</span>',
-           '<br><span>Pfizer (5-11): <span>{ifelse (!is.na(Pfizer_child) & Pfizer_child, "Yes", "No")}</span></div>',
-           '<br><strong>Insurance Accepted: </strong>{ifelse (!is.na(insurance_accepted) & insurance_accepted, "Yes", "No")}',
-           '<br><strong>Walk-Ins Allowed: </strong>{ifelse (!is.na(walkins_accepted) & walkins_accepted, "Yes", "No")}',
-          '</div>'))
-
   # Create map using Leaflet
   # see: https://rstudio.github.io/leaflet/
   output$cfmap <- renderLeaflet({
