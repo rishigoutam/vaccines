@@ -28,6 +28,7 @@ summary(cars)
 #   what zip/state has most in stock
 # add css for popup in stock and maybe others (data table)
 # marker indicates availability based on view
+# display count of providers
 ```
 
 ## Including Plots

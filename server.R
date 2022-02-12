@@ -1,12 +1,30 @@
 # Vaccine Shiny app server
 function(input, output) {
+  # Filter data by user input
+  vaccine_data <- reactive({
+    filtered_data <- covid %>%
+      filter(ifelse(input$walkin_input,
+                    walkins_accepted == c(TRUE),
+                    walkins_accepted %in% c(TRUE, FALSE, NA))) %>%
+      filter(ifelse(input$insurance_input,
+                    insurance_accepted == c(TRUE),
+                    insurance_accepted %in% c(TRUE, FALSE, NA)))
+
+    # A multi select is null on initializing the app
+    ifelse(!is.null(input$state_input),
+                    return (filtered_data %>% filter(state %in% input$state_input)),
+                    return (filtered_data))
+      # TODO filter by vaccine type
+  })
+
+
   # Create map using Leaflet
   # see: https://rstudio.github.io/leaflet/
   output$vaccine_map <- renderLeaflet({
-    leaflet(covid) %>%
+    leaflet(vaccine_data()) %>%
       addTiles() %>%
       # TODO marker should indicate availability
-      addAwesomeMarkers(data = covid, lat = ~latitude, lng = ~longitude,
+      addAwesomeMarkers(data = vaccine_data(), lat = ~latitude, lng = ~longitude,
                         popup = ~provider_popup, clusterOptions = markerClusterOptions(),
                         icon = awesomeIcons(icon = 'ion-medkit', iconColor = 'darkgreen',
                                             library = 'ion', markerColor = 'green'))
@@ -41,9 +59,10 @@ function(input, output) {
 
       # Set up parameters to pass to Rmd document
       params <- list(state = input$state_input,
-                     zip = input$zip_input,
-                     file_type = input$file_type_input,
-                     vaccine_type = input$vaccine_type_input)
+                     vaccine_type = input$vaccine_type_input,
+                     insurance_accepted = input$insurance_input,
+                     walkins_allowed = input$walkin_input,
+                     file_type = input$file_type_input)
 
       # Knit the document, passing in the `params` list, and eval it in a
       # child of the global environment (this isolates the code in the document
