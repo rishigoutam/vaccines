@@ -10,6 +10,7 @@ DEBUG <- FALSE
 # https://data.cdc.gov/Vaccinations/Vaccines-gov-COVID-19-vaccinating-provider-locatio/5jp2-pgaw
 # covid <- read_csv("./data/Vaccines.gov__COVID-19_vaccinating_provider_locations.csv")
 covid <- read_rds("./data/covid.rds")
+states_list <- read_rds("./data/states.rds")
 
 # Unused Data (for now)
 

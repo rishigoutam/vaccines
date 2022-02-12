@@ -2,18 +2,22 @@
 title: "Vaccine Report"
 output: html_document
 params:
-  n: NA
   state: NA
+  zip: NA
+  file_type: NA
+  vaccine_type: NA
 ---
 
 ```{r echo=FALSE}
 # The `params` object is available in the document.
 params$n
 params$state
+params$zip
+params$file_type
+params$vaccine_type
 ```
 
-A plot of `params$n` random points.
+A plot of `params` random points.
 
 ```{r}
-plot(rnorm(params$n), rnorm(params$n))
 ```

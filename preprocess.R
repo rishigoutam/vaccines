@@ -51,6 +51,7 @@ covid <- covid %>%
   mutate(street1 = str_to_upper(street1)) %>%
   mutate(street2 = str_to_upper(street2)) %>%
   mutate(city = str_to_upper(city)) %>%
+  mutate(state = str_to_upper(state)) %>%
   filter(zip != ".") %>%
   mutate(zip = as.numeric(str_extract(zip, "[0-9]+")))
 
@@ -139,7 +140,72 @@ covid <- covid %>%
                                    '<br><strong>Walk-Ins Allowed: </strong>{ifelse (!is.na(walkins_accepted) & walkins_accepted, "Yes", "No")}',
                                    '</div>'))
 
-# Output R Data file ------------------------------------------------------
+
+# Create named list of states ---------------------------------------------
+
+abbrv <- c("", sort(unique(covid$state))) # 55 states
+# see: https://en.wikipedia.org/wiki/List_of_U.S._state_and_territory_abbreviations
+state_names <- c("All",
+                "Alaska",
+                "Alabama",
+                "Arkansas",
+                "Arizona",
+                "California",
+                "Colorado",
+                "Connecticut",
+                "District of Columbia",
+                "Delaware",
+                "Florida",
+                "Georgia",
+                "Guam",
+                "Hawaii",
+                "Iowa",
+                "Idaho",
+                "Illinois",
+                "Indiana",
+                "Kansas",
+                "Kentucky",
+                "Louisiana",
+                "Massachusetts",
+                "Maryland",
+                "Maine",
+                "Michigan",
+                "Minnesota",
+                "Missouri",
+                "Mississippi",
+                "Montana",
+                "North Carolina",
+                "North Dakota",
+                "Nebraska",
+                "New Hampshire",
+                "New Jersey",
+                "New Mexico",
+                "Nevada",
+                "New York",
+                "Ohio",
+                "Oklahoma",
+                "Oregon",
+                "Pennsylvania",
+                "Puerto Rico",
+                "Palau",
+                "Rhode Island",
+                "South Carolina",
+                "South Dakota",
+                "Tennessee",
+                "Texas",
+                "Utah",
+                "Virginia",
+                "Virgin Islands",
+                "Vermont",
+                "Washington",
+                "Wisconsin",
+                "West Virginia",
+                "Wyoming")
+
+states <- setNames(abbrv, state_names)
+# View(data.frame(state_names, abbrv))                # check
+
+# Output R Data files -----------------------------------------------------
 
 write_rds(covid, file = "./data/covid.rds")           # no compression for speed reading
 
@@ -148,3 +214,5 @@ write_rds(covid, file = "./data/covid.rds")           # no compression for speed
 # as.numeric(object.size(covidrds)/10^6)              # 74MB in memory
 # file.size("./data/covid.rds")/10^6                  # 51MB on disk (uncompressed)
 # }
+
+write_rds(states, file = "./data/states.rds")

@@ -2,7 +2,7 @@
 function(input, output) {
   # Create map using Leaflet
   # see: https://rstudio.github.io/leaflet/
-  output$cfmap <- renderLeaflet({
+  output$vaccine_map <- renderLeaflet({
     leaflet(covid) %>%
       addTiles() %>%
       # TODO marker should indicate availability
@@ -40,7 +40,10 @@ function(input, output) {
       file.copy("report.Rmd", tempReport, overwrite = TRUE)
 
       # Set up parameters to pass to Rmd document
-      params <- list(n = input$slider  , state = input$state_selection)
+      params <- list(state = input$state_input,
+                     zip = input$zip_input,
+                     file_type = input$file_type_input,
+                     vaccine_type = input$vaccine_type_input)
 
       # Knit the document, passing in the `params` list, and eval it in a
       # child of the global environment (this isolates the code in the document
