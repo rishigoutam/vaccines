@@ -1,0 +1,19 @@
+---
+title: "Vaccine Report"
+output: html_document
+params:
+  n: NA
+  state: NA
+---
+
+```{r echo=FALSE}
+# The `params` object is available in the document.
+params$n
+params$state
+```
+
+A plot of `params$n` random points.
+
+```{r}
+plot(rnorm(params$n), rnorm(params$n))
+```
