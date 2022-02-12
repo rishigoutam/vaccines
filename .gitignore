@@ -47,3 +47,4 @@ vignettes/*.pdf
 unused_data/*
 
 rsconnect/shinyapps.io/rishigoutam/vaccines.dcf
+*.dcf
