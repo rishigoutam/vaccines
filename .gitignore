@@ -43,3 +43,7 @@ vignettes/*.pdf
 
 # IntelliJ
 .idea/*
+
+unused_data/*
+
+rsconnect/shinyapps.io/rishigoutam/vaccines.dcf

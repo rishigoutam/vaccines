@@ -6,9 +6,7 @@ library(DT)
 library(leaflet)
 library(dialr)
 
-setwd("~/vaccines")
-
-DEBUG <- FALSE
+DEBUG <- TRUE
 USE_AWS <- FALSE
 
 # Load data ---------------------------------------------------------------

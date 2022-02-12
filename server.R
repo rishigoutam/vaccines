@@ -1,5 +1,5 @@
 function(input, output) {
-  # Create information popup for each provider
+  # Create popup information column to display on the map for each vaccine provider
   covid <- covid %>%
     mutate(provider_popup = str_glue(.na = "",
           '<div class="popup">',
@@ -17,7 +17,8 @@ function(input, output) {
            '<br><strong>Walk-Ins Allowed: </strong>{ifelse (!is.na(walkins_accepted) & walkins_accepted, "Yes", "No")}',
           '</div>'))
 
-  # Leaflet map
+  # Create map using Leaflet
+  # see: https://rstudio.github.io/leaflet/
   output$cfmap <- renderLeaflet({
     leaflet(covid) %>%
       addTiles() %>%
