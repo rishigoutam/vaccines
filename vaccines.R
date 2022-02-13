@@ -59,4 +59,3 @@ for (vaccine_type in user_vaccine_types) {
            title = str_glue("Percentage of Vaccine Providers having {vaccine_name} in stock by state"))
     )
 }
-
