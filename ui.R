@@ -19,6 +19,8 @@ body <- dashboardBody(
   ),
   tabsetPanel(
     tabPanel("Map",
+             div(id = "num_providers", textOutput("num_providers")),
+             # h1(str_glue("{nrow(vaccine_data())} COVID-19 Vaccine Providers")),
              withSpinner(leafletOutput("vaccine_map"), size = 1),
 
              # Report Generation

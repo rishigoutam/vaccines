@@ -1,6 +1,6 @@
 # Vaccine Shiny app server
 function(input, output) {
-  # Filter data by user input
+  # Filter data by user input ---------------------------------------------
   vaccine_data <- reactive({
     filtered_data <- covid
 
@@ -49,10 +49,12 @@ function(input, output) {
     return (filtered_data)
   })
 
-  # Get number of provider locations
+  # Get number of provider locations --------------------------------------
+  output$num_providers <- reactive({
+    return (str_glue("{nrow(vaccine_data())} COVID-19 Vaccine Providers"))
+  })
 
-
-  # Create map using Leaflet
+  # Create map using Leaflet ----------------------------------------------
   # see: https://rstudio.github.io/leaflet/
   output$vaccine_map <- renderLeaflet({
     leaflet(vaccine_data()) %>%
@@ -64,7 +66,7 @@ function(input, output) {
                                             library = 'ion', markerColor = 'green'))
   })
 
-  # Display table using DT
+  # Display table using DT -------------------------------------------------
   # see: https://rstudio.github.io/DT/
   # see: https://clarewest.github.io/blog/post/making-tables-shiny/
   output$providers <- DT::renderDataTable({
