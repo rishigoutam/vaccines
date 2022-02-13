@@ -31,18 +31,6 @@ covid %>%
   geom_col() +
   labs(x = "State/Territory", y = "Number of Vaccine Providers", title = "Number of Vaccine Providers by State")
 
-# % Availability of Moderna in all states
-covid %>%
-  mutate(Moderna = replace_na(c(Moderna), FALSE)) %>%
-  group_by(state, Moderna) %>%
-  summarise(Moderna_Available_Count = n()) %>%
-  mutate(Moderna_Prop = 100*Moderna_Available_Count / sum(Moderna_Available_Count)) %>%
-  filter(Moderna == TRUE) %>%
-  ggplot(aes(fct_rev(fct_reorder(state, Moderna_Prop)), Moderna_Prop)) +
-  geom_col() +
-  labs(x = "State/Territory", y = "Moderna in stock (%)",
-       title = "Percentage of Vaccine Providers having Moderna in stock by state")
-
 # % Availability of user vaccines
 covid_availability <- covid %>%
   filter(state %in% user_states) %>%
@@ -71,6 +59,4 @@ for (vaccine_type in user_vaccine_types) {
            title = str_glue("Percentage of Vaccine Providers having {vaccine_name} in stock by state"))
     )
 }
-
-
 
