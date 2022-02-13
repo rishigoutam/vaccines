@@ -19,14 +19,16 @@ sidebar <- dashboardSidebar(
     menuItem("Filters", icon = icon("filter"))
   ),
 
-  # Show filters
-  selectInput("state_input", "State/Territory", choices = states_list, multiple = TRUE),
-  checkboxGroupInput("vaccine_type_input", "Vaccine in Stock",
-                     choiceNames = c("J&J Janssen (18+)", "Moderna (18+)", "Pfizer (12+)", "Pfizer (5-11)"),
-                     choiceValues = c("Janssen", "Moderna", "Pfizer", "Pfizer_child")),
-  div(id = "preferences",
-      checkboxInput("insurance_input", "Accepts Insurance", value = FALSE),
-      checkboxInput("walkin_input", "Walk-Ins Allowed", value = FALSE))
+  # Show filters for the 'Maps' and 'Data' tabs only
+  conditionalPanel(condition = "input.tabs == 'Map' || input.tabs == 'Data'",
+    selectInput("state_input", "State/Territory", choices = states_list, multiple = TRUE),
+    checkboxGroupInput("vaccine_type_input", "Vaccine in Stock",
+                       choiceNames = c("J&J Janssen (18+)", "Moderna (18+)", "Pfizer (12+)", "Pfizer (5-11)"),
+                       choiceValues = c("Janssen", "Moderna", "Pfizer", "Pfizer_child")),
+    div(id = "preferences",
+        checkboxInput("insurance_input", "Accepts Insurance", value = FALSE),
+        checkboxInput("walkin_input", "Walk-Ins Allowed", value = FALSE))
+  )
 )
 
 body <- dashboardBody(
