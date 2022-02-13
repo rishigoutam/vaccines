@@ -66,6 +66,7 @@ function(input, output) {
 
   # Display table using DT
   # see: https://rstudio.github.io/DT/
+  # see: https://clarewest.github.io/blog/post/making-tables-shiny/
   output$providers <- DT::renderDataTable({
     data_display <- vaccine_data() %>%
       relocate(name, city, state, zip, phone, insurance_accepted, walkins_accepted, Moderna, Pfizer, Pfizer_child, Janssen) %>%
@@ -74,16 +75,26 @@ function(input, output) {
 
     data_display #return the data to display
   },
-  filter = 'top',
+  filter = 'bottom',
   rownames = FALSE,
   colnames = c("Vaccine Provider", "City", "State", "ZIP", "Phone No.",
                "Accepts Insurance", "Walk-Ins Allowed",
                "Moderna (18+) In Stock", "Pfizer (12+) In Stock",
-               "Pfizer (5-11) In Stock", "J&J Janssen (18+) In Stock"))
+               "Pfizer (5-11) In Stock", "J&J Janssen (18+) In Stock"),
+  options = list(paging = TRUE,
+                 pageLength = 5,
+                 autoWidth = TRUE,
+                 buttons = c('csv', 'excel'),
+                 dom = 'Bfrtip'),
+  extensions = 'Buttons',
+  selection = 'single')
 
+  # Create a downloadable report of our filtered data
+  # see: https://shiny.rstudio.com/articles/generating-reports.html
   output$report <- downloadHandler(
     # For PDF output, change this to "report.pdf"
-    filename = "report.html",
+    filename = str_c("vaccine_report", input$file_type_input),
+    output_format <- ifelse(input$file_type_input == ".pdf", "pdf_document", "html_document"),
     content = function(file) {
       # Copy the report file to a temporary directory before processing it, in
       # case we don't have write permissions to the current working dir (which
@@ -101,7 +112,9 @@ function(input, output) {
       # Knit the document, passing in the `params` list, and eval it in a
       # child of the global environment (this isolates the code in the document
       # from the code in this app).
-      rmarkdown::render(tempReport, output_file = file,
+      rmarkdown::render(tempReport,
+                        output_file = file,
+                        output_format = output_format,
                         params = params,
                         envir = new.env(parent = globalenv())
       )

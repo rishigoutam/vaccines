@@ -31,6 +31,7 @@ summary(cars)
 # display count of providers
 # add file upload/fetch latest data
 # compare historical data against current (time series)
+# add different output types (tufte, ppt, etc)
 ```
 
 ## Including Plots
