@@ -119,9 +119,34 @@ plot_usmap(data = insurance_prop_table,
            values = "insurance_prop",
            color = "darkgreen") +
   scale_fill_continuous(low = "lightgreen", high = "darkgreen",
-                        name = "Acceptance Rate (%)", label = scales::comma) +
+                        name = "Insurance Acceptance Rate (%)", label = scales::comma) +
   theme(panel.background = element_rect(colour = "darkgreen")) +
   theme(legend.position = "right") +
   labs(title = "Insurance Acceptance at Vaccine Providers")
 
-# Get proportion of providers that accept insurance and allow walkins in states
+# Get proportion of providers that allow walkins in states
+# TODO: refactor this with insurance code above as the code is identical
+
+covid_walkins <- df %>%
+  filter(state %in% user_states) %>%
+  select(location_guid, state, walkins_accepted) %>%
+  mutate(walkins_accepted = ifelse(is.na(walkins_accepted), FALSE, walkins_accepted))
+
+walkins_prop_table <- covid_walkins %>%
+  group_by(state, walkins_accepted) %>%
+  summarise(walkins_count = n()) %>%
+  mutate(walkins_prop = 100*walkins_count/sum(walkins_count)) %>%
+  filter(walkins_accepted == TRUE) %>%
+  select(state, walkins_prop)
+
+walkins_prop_table$fips <- fips(walkins_prop_table$state)
+plot_usmap(data = walkins_prop_table,
+           regions = "states",
+           include = user_states,
+           values = "walkins_prop",
+           color = "darkblue") +
+  scale_fill_continuous(low = "lightblue", high = "darkblue",
+                        name = "Walkins Allowed Rate (%)", label = scales::comma) +
+  theme(panel.background = element_rect(colour = "darkblue")) +
+  theme(legend.position = "right") +
+  labs(title = "Walk-Ins Allowed at Vaccine Providers")
