@@ -1,7 +1,12 @@
 library(shinydashboard)
 library(shinycssloaders)
 
+
+# Header ------------------------------------------------------------------
+
 header <- dashboardHeader(title = "COVID-19 Dashboard")
+
+# Sidebar -----------------------------------------------------------------
 
 sidebar <- dashboardSidebar(
   sidebarMenu(
@@ -37,6 +42,8 @@ sidebar <- dashboardSidebar(
   )
 )
 
+# Body --------------------------------------------------------------------
+
 body <- dashboardBody(
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "vaccines.css"),
@@ -53,5 +60,7 @@ body <- dashboardBody(
     tabItem("FutureDev", includeMarkdown("./TODO.Rmd"))
   )
 )
+
+# Page --------------------------------------------------------------------
 
 dashboardPage(header, sidebar, body, skin = 'green')
