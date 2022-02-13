@@ -3,13 +3,11 @@ library(shinycssloaders)
 
 header <- dashboardHeader(title = "COVID-19 Dashboard")
 
-vaccine_values <- c("Janssen", "Moderna", "Pfizer", "Pfizer_child")
 sidebar <- dashboardSidebar(
   selectInput("state_input", "State/Territory", choices = states_list, multiple = TRUE),
-  checkboxGroupInput("vaccine_type_input", "Vaccine Type",
+  checkboxGroupInput("vaccine_type_input", "Vaccine in Stock",
                      choiceNames = c("J&J Janssen (18+)", "Moderna (18+)", "Pfizer (12+)", "Pfizer (5-11)"),
-                     choiceValues = vaccine_values,
-                     selected = vaccine_values),
+                     choiceValues = c("Janssen", "Moderna", "Pfizer", "Pfizer_child")),
   div(id = "preferences",
     checkboxInput("insurance_input", "Accepts Insurance", value = FALSE),
     checkboxInput("walkin_input", "Walk-Ins Allowed", value = FALSE))

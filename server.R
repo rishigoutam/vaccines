@@ -12,7 +12,7 @@ function(input, output) {
     }
 
     # Filter by provider preference (walkin, insurance)
-    filtered_data <- covid %>%
+    filtered_data <- filtered_data %>%
       filter(ifelse(input$walkin_input,
                     walkins_accepted == c(TRUE),
                     walkins_accepted %in% c(TRUE, FALSE, NA))) %>%
@@ -21,19 +21,29 @@ function(input, output) {
                     insurance_accepted %in% c(TRUE, FALSE, NA)))
 
     # Filter by type of vaccine
-    f <- input$vaccine_type_input # TODO REMOVE
     vaccine_types <- input$vaccine_type_input
-    if (!is.na(vaccine_types)) {
-        showModerna <- "Moderna" %in% input$vaccine_type_input
-        showPfizer <- "Pfizer" %in% input$vaccine_type_input
-        showPfizerChild <- "Pfizer_child" %in% input$vaccine_type_input
-        showJanssen <- "Janssen" %in% input$vaccine_type_input
+    if (!is.null(vaccine_types)) {
+        filterByModerna <- "Moderna" %in% input$vaccine_type_input
+        filterByPfizer <- "Pfizer" %in% input$vaccine_type_input
+        filterByPfizerChild <- "Pfizer_child" %in% input$vaccine_type_input
+        filterByJanssen <- "Janssen" %in% input$vaccine_type_input
 
-        filtered_data <- filtered_data %>%
-          filter(Moderna == showModerna) %>%
-          filter(Pfizer == showPfizer) %>%
-          filter(Pfizer_child == showPfizerChild) %>%
-          filter(Janssen == showJanssen)
+        if (filterByModerna) {
+          filtered_data <- filtered_data %>%
+            filter(Moderna == TRUE)
+        }
+        if (filterByPfizer) {
+          filtered_data <- filtered_data %>%
+            filter(Pfizer == TRUE)
+        }
+        if (filterByPfizerChild) {
+          filtered_data <- filtered_data %>%
+            filter(Pfizer_child == TRUE)
+        }
+        if (filterByJanssen) {
+          filtered_data <- filtered_data %>%
+            filter(Janssen == TRUE)
+        }
     }
 
     return (filtered_data)
