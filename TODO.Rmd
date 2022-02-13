@@ -38,6 +38,10 @@ summary(cars)
 # test data from another day
 # clear filters
 # help text info for needing pdflatex to create pdf report
+# make git repo public
+# add legend to map?
+# use us_map https://cran.r-project.org/web/packages/usmap/vignettes/mapping.html
+# upload datasets/read latest
 ```
 
 ## Including Plots

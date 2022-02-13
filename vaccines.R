@@ -2,12 +2,13 @@
 #' Filtered reports from Shiny in report.Rmd
 
 library(tidyverse)
+library(reshape2)
 
 covid <- readRDS("./data/covid.rds")
 
 # Filters a user can pass
 user_states <- c("WA", "CA", "OR")
-user_vaccine_types <- c("Janssen", "Pfizer", "Pfizer_child")
+user_vaccine_types <- c("Moderna", "Janssen", "Pfizer", "Pfizer_child")
 user_insurance_accepted <- c(TRUE)
 user_walkins_allows <- c(TRUE)
 
@@ -21,6 +22,9 @@ GetDisplayName <- function(vaccine_type) {
   )
 }
 
+# Number of providers in US - no filters
+nrow(covid)
+
 # Number of providers by state
 covid %>%
   filter(state %in% user_states) %>%
@@ -29,7 +33,8 @@ covid %>%
   arrange(desc(num_providers)) %>%
   ggplot(aes(fct_rev(fct_reorder(state, num_providers)), num_providers)) +
   geom_col() +
-  labs(x = "State/Territory", y = "Number of Vaccine Providers", title = "Number of Vaccine Providers by State")
+  labs(x = "State/Territory", y = "Number of Vaccine Providers", title = "Number of Vaccine Providers by State") +
+  theme(plot.title = element_text(hjust = 0.5))
 
 # % Availability of user vaccines
 covid_availability <- covid %>%
@@ -43,6 +48,7 @@ covid_availability <- covid %>%
 # for (var in names(mtcars)) {
 #   mtcars %>% count(.data[[var]])
 # }
+
 for (vaccine_type in user_vaccine_types) {
   vaccine_availability <-
     covid_availability %>%
@@ -56,6 +62,40 @@ for (vaccine_type in user_vaccine_types) {
       ggplot(data = vaccine_availability, aes(fct_rev(fct_reorder(state, vaccine_prop)), vaccine_prop)) +
       geom_col() +
       labs(x = "State/Territory", y = str_c(vaccine_name, " in stock (%)"),
-           title = str_glue("Percentage of Vaccine Providers having {vaccine_name} in stock by state"))
+           title = str_glue("Percentage of Vaccine Providers having {vaccine_name} in stock by state")) +
+      theme(plot.title = element_text(hjust = 0.5))
     )
 }
+
+# Do above but we want to see multiple types side by side
+vaccine_prop_table <- tibble(state = user_states)
+
+for (vaccine_type in user_vaccine_types) {
+  prop <- covid_availability %>%
+    group_by(state, .data[[vaccine_type]]) %>%
+    summarise(vaccine_count = n()) %>%
+    mutate(vaccine_prop = 100*vaccine_count/sum(vaccine_count)) %>%
+    filter(.data[[vaccine_type]] == TRUE)
+
+  # see: https://stackoverflow.com/questions/25165197/r-create-new-column-with-name-coming-from-variable
+  vaccine_prop_table[, vaccine_type] <- prop$vaccine_prop
+}
+
+# reshape to long
+# see: https://stackoverflow.com/questions/58548522/multiple-variables-in-geom-bar-or-geom-col
+vaccine_prop_table <- reshape2::melt(vaccine_prop_table, id.vars = "state")
+
+# Plot the in stock percentages by state
+prop_legend_labels <- sapply(user_vaccine_types, GetDisplayName)
+
+vaccine_prop_table %>%
+  ggplot(aes(x = state, value, fill = variable)) +
+  geom_col(position = "dodge") +
+  labs(x = "State/Territory", y = "Percent in stock",
+       title = str_glue("Vaccines in stock by State and Vaccine Type"),
+       fill = "Vaccine Type") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_fill_discrete(labels=prop_legend_labels)
+
+# Get proportion of providers that accept insurance and allow walkins
+

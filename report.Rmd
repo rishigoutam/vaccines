@@ -1,5 +1,6 @@
 ---
 title: "Vaccine Report"
+author: "Rishi Goutam"
 params:
   state: NA
   vaccine_type: NA
@@ -9,7 +10,7 @@ params:
   df: NA
 ---
 
-```{r echo=FALSE}
+```{r echo=FALSE, message=FALSE}
 # The `params` object is available in the document.
 "State"
 params$state
