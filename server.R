@@ -49,6 +49,9 @@ function(input, output) {
     return (filtered_data)
   })
 
+  # Get number of provider locations
+
+
   # Create map using Leaflet
   # see: https://rstudio.github.io/leaflet/
   output$vaccine_map <- renderLeaflet({
@@ -63,8 +66,8 @@ function(input, output) {
 
   # Display table using DT
   # see: https://rstudio.github.io/DT/
-  output$covid <- DT::renderDataTable({
-    data_display <- covid %>%
+  output$providers <- DT::renderDataTable({
+    data_display <- vaccine_data() %>%
       relocate(name, city, state, zip, phone, insurance_accepted, walkins_accepted, Moderna, Pfizer, Pfizer_child, Janssen) %>%
       ungroup() %>%
       select(name, city, state, zip, phone, insurance_accepted, walkins_accepted, Moderna, Pfizer, Pfizer_child, Janssen)

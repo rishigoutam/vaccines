@@ -26,7 +26,7 @@ body <- dashboardBody(
                           choices = c("PDF" = ".pdf", "HTML" = ".html"),
                           selected = ".pdf", inline = TRUE),
              downloadButton("report", "Generate report")),
-    tabPanel("Data", DT::dataTableOutput("covid")),
+    tabPanel("Data", DT::dataTableOutput("providers")),
     tabPanel("About", includeMarkdown("./TODO.Rmd"))
   )
 )
