@@ -28,7 +28,12 @@ sidebar <- dashboardSidebar(
     checkboxGroupInput("preferences_title", "Provider Preferences"),
     div(id = "preferences",
         checkboxInput("insurance_input", "Accepts Insurance", value = FALSE),
-        checkboxInput("walkin_input", "Walk-Ins Allowed", value = FALSE))
+        checkboxInput("walkin_input", "Walk-Ins Allowed", value = FALSE)),
+
+    # Report Generation
+    radioButtons('format', 'Document format', c('PDF', 'HTML', 'Word'),
+                 inline = TRUE),
+    div(id = "download", downloadButton("downloadReport"))
   )
 )
 
@@ -41,12 +46,7 @@ body <- dashboardBody(
   tabItems(
     tabItem("Map",
             textOutput("num_providers"),
-            withSpinner(leafletOutput("vaccine_map"), type = 7),
-
-            # Report Generation
-            radioButtons('format', 'Document format', c('PDF', 'HTML', 'Word'),
-                         inline = TRUE),
-            downloadButton("downloadReport")),
+            withSpinner(leafletOutput("vaccine_map"), type = 7)),
     tabItem("Data",
             withSpinner(DT::dataTableOutput("providers"))),
     tabItem("About", includeMarkdown("./README.md")),
