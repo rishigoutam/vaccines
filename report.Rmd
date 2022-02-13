@@ -10,14 +10,18 @@ params:
 
 ```{r echo=FALSE}
 # The `params` object is available in the document.
+"State"
 params$state
+"Vaccine Type"
 params$vaccine_type
+"Insurance accepted"
 params$insurance_accepted
+"Walkins allowed"
 params$walkins_allowed
+"File type"
 params$file_type
 ```
 
-A plot of `params` random points.
 
 ```{r}
 ```

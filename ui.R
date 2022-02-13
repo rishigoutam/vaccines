@@ -40,14 +40,13 @@ body <- dashboardBody(
 
   tabItems(
     tabItem("Map",
-             textOutput("num_providers"),
-             withSpinner(leafletOutput("vaccine_map"), type = 7),
+            textOutput("num_providers"),
+            withSpinner(leafletOutput("vaccine_map"), type = 7),
 
-             # Report Generation
-             radioButtons("file_type_input", "Report File Type",
-                          choices = c("PDF" = ".pdf", "HTML" = ".html"),
-                          selected = ".pdf", inline = TRUE),
-             downloadButton("report", "Generate report")),
+            # Report Generation
+            radioButtons('format', 'Document format', c('PDF', 'HTML', 'Word'),
+                         inline = TRUE),
+            downloadButton("downloadReport")),
     tabItem("Data",
             withSpinner(DT::dataTableOutput("providers"))),
     tabItem("About", includeMarkdown("./README.md")),
