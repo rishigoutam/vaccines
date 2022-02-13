@@ -1,3 +1,17 @@
+/* Hacky CSS tweaks to make shinydashboard look better */
+
+#num_providers {
+  font-size: 20px;
+  text-align: center;
+}
+
+/* Need to give a title to our checkboxes which aren't real checkbox groups*/
+#preferences_title {
+  padding: 0px 15px 0px 15px;
+  margin: 0px
+}
+
+/* Put preferences checkboxes side by side and fix spacing*/
 #preferences {
   display: flex;
 }
@@ -6,14 +20,19 @@
   margin-top: 15px;
 }
 
-#provider_container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  text-align: center;
+#preferences > div.shiny-input-container {
+  padding-top: 0px;
 }
 
-#num_providers {
-  font-color: "red";
-  font-size: 20px;
+/* hide li bullet */
+#sidebarItemExpanded > div > li{
+  list-style-type:none
+}
+
+/* https://www.w3schools.com/howto/howto_css_bullet_color.asp */
+#sidebarItemExpanded > div > li::before {
+  content: "\2022";
+  color: #222d32;
+  display: inline-block; /* Needed to add space between the bullet and the text */
+  width: 1em; /* Also needed for space (tweak if needed) */
 }
