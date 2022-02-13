@@ -1,0 +1,7 @@
+#preferences {
+  display: flex;
+}
+
+#preferences input {
+  margin-top: 15px;
+}

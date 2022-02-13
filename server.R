@@ -2,6 +2,16 @@
 function(input, output) {
   # Filter data by user input
   vaccine_data <- reactive({
+    filtered_data <- covid
+
+    # Filter by state(s)
+    # A multi select is null on initializing the app
+    if(!is.null(input$state_input)) {
+           filtered_data <- filtered_data %>%
+             filter(state %in% input$state_input)
+    }
+
+    # Filter by provider preference (walkin, insurance)
     filtered_data <- covid %>%
       filter(ifelse(input$walkin_input,
                     walkins_accepted == c(TRUE),
@@ -10,13 +20,24 @@ function(input, output) {
                     insurance_accepted == c(TRUE),
                     insurance_accepted %in% c(TRUE, FALSE, NA)))
 
-    # A multi select is null on initializing the app
-    ifelse(!is.null(input$state_input),
-                    return (filtered_data %>% filter(state %in% input$state_input)),
-                    return (filtered_data))
-      # TODO filter by vaccine type
-  })
+    # Filter by type of vaccine
+    f <- input$vaccine_type_input # TODO REMOVE
+    vaccine_types <- input$vaccine_type_input
+    if (!is.na(vaccine_types)) {
+        showModerna <- "Moderna" %in% input$vaccine_type_input
+        showPfizer <- "Pfizer" %in% input$vaccine_type_input
+        showPfizerChild <- "Pfizer_child" %in% input$vaccine_type_input
+        showJanssen <- "Janssen" %in% input$vaccine_type_input
 
+        filtered_data <- filtered_data %>%
+          filter(Moderna == showModerna) %>%
+          filter(Pfizer == showPfizer) %>%
+          filter(Pfizer_child == showPfizerChild) %>%
+          filter(Janssen == showJanssen)
+    }
+
+    return (filtered_data)
+  })
 
   # Create map using Leaflet
   # see: https://rstudio.github.io/leaflet/

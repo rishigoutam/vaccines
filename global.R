@@ -28,7 +28,7 @@ states_list <- read_rds("./data/states.rds")
 # outline <- rgdal::readOGR("./data/gz_2010_us_outline_5m.json")
 
 
-#' filter by zip code for fewer markers in map
+# filter by zip code for fewer markers in map
 if (DEBUG) {
   covid <- covid %>%
     filter(zip %in% c("98604", "98101", "11225", "19607", "98052"))

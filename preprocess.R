@@ -33,11 +33,11 @@ covid <- covid %>%
            "walkins_accepted",               # boolean
            "med_name",                       # Moderna, Pfizer, J&J
            "in_stock",                       # boolean
-           # "supply_level",                   # -1 -> No report; 0 -> No supply;
+           # "supply_level",                 # -1 -> No report; 0 -> No supply;
            # 1 -> <1 day supply; 3 -> 1-2 day supply; 4 -> >2 day supply
            "latitude",
            "longitude",
-           # category="Category"             # covid or seasonal. all are covid for covid. TODO keeping if we want to check against flu dataset
+           # category="Category"             # covid or seasonal. all are covid for covid. TODO keep if we want to check against flu dataset
   ))
 
 ## Basic Cleaning ---------------------------------------------------------

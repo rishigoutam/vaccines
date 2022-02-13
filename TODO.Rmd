@@ -29,6 +29,8 @@ summary(cars)
 # add css for popup in stock and maybe others (data table)
 # marker indicates availability based on view
 # display count of providers
+# add file upload/fetch latest data
+# compare historical data against current (time series)
 ```
 
 ## Including Plots
