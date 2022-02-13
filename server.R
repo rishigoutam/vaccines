@@ -1,4 +1,4 @@
-# Vaccine Shiny app server
+# Vaccines Shiny app server
 function(input, output) {
   # Filter data by user input ---------------------------------------------
   vaccine_data <- reactive({
@@ -49,6 +49,17 @@ function(input, output) {
     return (filtered_data)
   })
 
+  # Reset filter(s) ------------------------------------------------------
+  # Add an id so we can click the Filter badge and reset user selection(s)
+  shinyjs::runjs("document.querySelectorAll('small')[1].id = 'clear'")
+  shinyjs::onclick("clear", {
+    shinyjs::reset("state_input")
+    shinyjs::reset("vaccine_type_input")
+    shinyjs::reset("insurance_input")
+    shinyjs::reset("walkin_input")
+    shinyjs::reset("format")
+  })
+
   # Get number of provider locations --------------------------------------
   output$num_providers <- reactive({
     return (str_glue("{nrow(vaccine_data())} COVID-19 Vaccine Providers"))
@@ -93,6 +104,7 @@ function(input, output) {
 
   # Create a downloadable report of our filtered data -----------------------
   # see: https://shiny.rstudio.com/articles/generating-reports.html
+  # see: https://shiny.rstudio.com/gallery/download-knitr-reports.html
   output$downloadReport <- downloadHandler(
     filename = function() {
       paste('vaccine-report', sep = '.', switch(
@@ -107,7 +119,8 @@ function(input, output) {
                      vaccine_type = input$vaccine_type_input,
                      insurance_accepted = input$insurance_input,
                      walkins_allowed = input$walkin_input,
-                     file_type = input$format)
+                     file_type = input$format,
+                     df = vaccine_data())
 
       # temporarily switch to the temp dir, in case you do not have write
       # permission to the current working directory

@@ -6,6 +6,7 @@ params:
   insurance_accepted: NA
   walkins_allowed: NA
   file_type: NA
+  df: NA
 ---
 
 ```{r echo=FALSE}
@@ -20,6 +21,8 @@ params$insurance_accepted
 params$walkins_allowed
 "File type"
 params$file_type
+"df"
+params$df
 ```
 
 

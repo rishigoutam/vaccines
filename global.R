@@ -2,6 +2,7 @@ library(shiny)
 library(tidyverse)
 library(DT)
 library(leaflet)
+library(shinyjs)
 
 DEBUG <- FALSE
 

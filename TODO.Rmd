@@ -31,7 +31,12 @@ summary(cars)
 # display count of providers
 # add file upload/fetch latest data
 # compare historical data against current (time series)
-# add different output types (tufte, ppt, etc)
+# add different output types (tufte, ppt, etc) https://bookdown.org/yihui/rmarkdown/tufte-handouts.html
+# cleanup files - remove vaccines.R, move into R folder, etc
+# Test if stuff works from beginning
+# test data from another day
+# clear filters
+# help text info for needing pdflatex to create pdf report
 ```
 
 ## Including Plots
