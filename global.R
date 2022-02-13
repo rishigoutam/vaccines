@@ -2,7 +2,6 @@ library(shiny)
 library(tidyverse)
 library(DT)
 library(leaflet)
-library(dialr)
 
 DEBUG <- FALSE
 
