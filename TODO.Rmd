@@ -25,6 +25,7 @@ summary(cars)
 # add filters (zip, state, vaccine type, in stock)
 # add graphs
 #   what vaccines are in stock
+#      by type
 #   what zip/state has most in stock
 # add css for popup in stock and maybe others (data table)
 # marker indicates availability based on view
