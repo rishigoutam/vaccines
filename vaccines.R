@@ -1,40 +1,29 @@
-setwd("~/vaccines/R")
+#' EDA for our covid providers data
+#' Filtered reports from Shiny in report.Rmd
+
 library(tidyverse)
 
-covid <- tbl_df(read.csv("../data/Vaccines.gov__COVID-19_vaccinating_provider_locations.csv"))
-# flu <- tbl_df(read.csv("../data/Vaccines.gov__Flu_vaccinating_provider_locations.csv"))
-# both <- inner_join(flu, covid, by = "provider_location_guid") # TODO fix cols
-# View(both)
+covid <- readRDS("./data/covid.rds")
 
-# TODO
-# reactive funcs
-# observables
-# csv -> sql and connect
-# shinyapp.io vs local
-#
-# R:
-# leaflet
-# dplyr + ggplot visuals
-# basic stats
-# lm ????
+# Filters a user can pass
+user_states <- c("WA", "CA", "OR")
+user_vaccine_types <- c("Pfizer", "Pfizer_child")
+user_insurance_accepted <- c(TRUE)
+user_walkins_allows <- c(TRUE)
 
-covid$latitude <- as.numeric(covid$latitude)
-covid$longitude <- as.numeric(covid$longitude)
-
-# Data Cleaning
-# 39 covid locations missing lat, long
-sum(is.na(covid$latitude))
-sum(is.na(covid$longitude))
-# 32 flu locations missing lat, long
-sum(is.na(flu$latitude))
-sum(is.na(flu$longitude))
-
-# Missing lat, long values
+# Number of providers by state
 covid %>%
-  filter(is.na(latitude))
+  filter(state %in% user_states) %>%
+  group_by(state) %>%
+  summarise(num_providers = n()) %>%
+  arrange(desc(num_providers)) %>%
+  ggplot(aes(fct_rev(fct_reorder(state, num_providers)), num_providers)) +
+  geom_col() +
+  labs(x = "State", y = "Number of Vaccine Providers", title = "Number of Vaccine Providers by State")
 
-colnames(covid)
-head(covid)
-
-covid_cols <- c("provider_location_guid", "loc_phone", )
-
+# % Availability of Moderna
+covid %>%
+  mutate(Moderna = replace_na(c(Moderna), FALSE)) %>%
+  group_by(state, Moderna) %>%
+  summarise(Moderna_Available_Count = n()) %>%
+  mutate(Moderna_Prop = Moderna_Available_Count / sum(Moderna_Available_Count))
