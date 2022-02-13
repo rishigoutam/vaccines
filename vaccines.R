@@ -3,8 +3,9 @@
 
 library(tidyverse)
 library(reshape2)
+library(usmap)
 
-covid <- readRDS("./data/covid.rds")
+df <- readRDS("./data/covid.rds")
 
 # Filters a user can pass
 user_states <- c("WA", "CA", "OR")
@@ -23,10 +24,10 @@ GetDisplayName <- function(vaccine_type) {
 }
 
 # Number of providers in US - no filters
-nrow(covid)
+nrow(df)
 
 # Number of providers by state
-covid %>%
+df %>%
   filter(state %in% user_states) %>%
   group_by(state) %>%
   summarise(num_providers = n()) %>%
@@ -37,7 +38,7 @@ covid %>%
   theme(plot.title = element_text(hjust = 0.5))
 
 # % Availability of user vaccines
-covid_availability <- covid %>%
+covid_availability <- df %>%
   filter(state %in% user_states) %>%
   mutate(across(user_vaccine_types, ~ (!is.na(.x) & !isFALSE(.x)) )) %>%
   select(c(location_guid, state, user_vaccine_types))
@@ -97,5 +98,30 @@ vaccine_prop_table %>%
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_fill_discrete(labels=prop_legend_labels)
 
-# Get proportion of providers that accept insurance and allow walkins
+# Get proportion of providers that accept insurance
 
+covid_insurance <- df %>%
+  filter(state %in% user_states) %>%
+  select(location_guid, state, insurance_accepted) %>%
+  mutate(insurance_accepted = ifelse(is.na(insurance_accepted), FALSE, insurance_accepted))
+
+insurance_prop_table <- covid_insurance %>%
+  group_by(state, insurance_accepted) %>%
+  summarise(insurance_count = n()) %>%
+  mutate(insurance_prop = 100*insurance_count/sum(insurance_count)) %>%
+  filter(insurance_accepted == TRUE) %>%
+  select(state, insurance_prop)
+
+insurance_prop_table$fips <- fips(insurance_prop_table$state)
+plot_usmap(data = insurance_prop_table,
+           regions = "states",
+           include = user_states,
+           values = "insurance_prop",
+           color = "darkgreen") +
+  scale_fill_continuous(low = "lightgreen", high = "darkgreen",
+                        name = "Acceptance Rate (%)", label = scales::comma) +
+  theme(panel.background = element_rect(colour = "darkgreen")) +
+  theme(legend.position = "right") +
+  labs(title = "Insurance Acceptance at Vaccine Providers")
+
+# Get proportion of providers that accept insurance and allow walkins in states

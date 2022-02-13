@@ -143,6 +143,7 @@ covid <- covid %>%
 
 # Create named list of states ---------------------------------------------
 
+# TODO use fips() here instead
 abbrv <- c("", sort(unique(covid$state))) # 55 states
 # see: https://en.wikipedia.org/wiki/List_of_U.S._state_and_territory_abbreviations
 state_names <- c("All",
@@ -207,7 +208,7 @@ states <- setNames(abbrv, state_names)
 
 # Output R Data files -----------------------------------------------------
 
-write_rds(covid, file = "./data/covid.rds")           # no compression for speed reading
+readr::write_rds(covid, file = "./data/covid.rds")    # no compression for speedy reading
 
 # NOT RUN {
 # covidrds <- read_rds(file = "./data/covid.rds")
@@ -215,4 +216,4 @@ write_rds(covid, file = "./data/covid.rds")           # no compression for speed
 # file.size("./data/covid.rds")/10^6                  # 51MB on disk (uncompressed)
 # }
 
-write_rds(states, file = "./data/states.rds")
+readr::write_rds(states, file = "./data/states.rds")
