@@ -8,10 +8,11 @@ library(usmap)
 df <- readRDS("./data/covid.rds")
 
 # Filters a user can pass
-user_states <- c("WA", "CA", "OR")
+# user_states <- c("WA", "CA", "OR")
+user_states <- (sort(unique(covid$state)))
 user_vaccine_types <- c("Moderna", "Janssen", "Pfizer", "Pfizer_child")
 user_insurance_accepted <- c(TRUE)
-user_walkins_allows <- c(TRUE)
+user_walkins_allowed <- c(TRUE)
 
 # Get the display name for vaccine
 GetDisplayName <- function(vaccine_type) {
@@ -71,6 +72,7 @@ for (vaccine_type in user_vaccine_types) {
 # Do above but we want to see multiple types side by side
 vaccine_prop_table <- tibble(state = user_states)
 
+# TODO: fails if states in prop is less than user_states because we filtered out a state
 for (vaccine_type in user_vaccine_types) {
   prop <- covid_availability %>%
     group_by(state, .data[[vaccine_type]]) %>%

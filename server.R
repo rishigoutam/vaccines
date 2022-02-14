@@ -1,4 +1,8 @@
 # Vaccines Shiny app server
+
+library(reshape2)
+library(usmap)
+
 function(input, output) {
   # Filter data by user input ---------------------------------------------
   vaccine_data <- reactive({
