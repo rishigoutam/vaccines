@@ -53,9 +53,9 @@ body <- dashboardBody(
   tabItems(
     tabItem("Map",
             textOutput("num_providers"),
-            withSpinner(leafletOutput("vaccine_map"), type = 7)),
+            withSpinner(leafletOutput("vaccine_map"), type = 7, color = "#00a65a")),
     tabItem("Data",
-            withSpinner(DT::dataTableOutput("providers"))),
+            withSpinner(DT::dataTableOutput("providers"), color = "#00a65a")),
     tabItem("About", includeMarkdown("./project_submission.md")),
     tabItem("FutureDev", includeMarkdown("./TODO.md"))
   )
