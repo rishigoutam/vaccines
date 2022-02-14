@@ -20,6 +20,5 @@ The dashboard can be used by both the general public and data scientists. Non-te
 * Processed R data file available in GitHub
 
 ## Try!
-[rishigoutam.shinyapps.io/vaccines](https://www.rishigoutam.shinyapps.io/vaccines/)
 
 ![qr code for rishigoutam.shinyapps.io/vaccines/](qr.png "Link to hosted dashboard")
