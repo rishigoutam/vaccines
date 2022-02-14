@@ -57,7 +57,7 @@ body <- dashboardBody(
     tabItem("Data",
             withSpinner(DT::dataTableOutput("providers"))),
     tabItem("About", includeMarkdown("./project_submission.md")),
-    tabItem("FutureDev", includeMarkdown("./TODO.Rmd"))
+    tabItem("FutureDev", includeMarkdown("./TODO.md"))
   )
 )
 
