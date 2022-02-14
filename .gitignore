@@ -49,3 +49,4 @@ unused_data/*
 rsconnect/shinyapps.io/rishigoutam/vaccines.dcf
 *.dcf
 test.R
+vaccines.Rproj
