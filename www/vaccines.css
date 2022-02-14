@@ -51,3 +51,8 @@
   color: white;
   background-color: #00a65a
 }
+
+/* shinyapps.io link */
+#shiny-tab-About > p > img {
+  display: flex;
+}
