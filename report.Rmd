@@ -116,6 +116,7 @@ for (vaccine_type in user_vaccine_types) {
     print(
       ggplot(data = vaccine_availability, aes(fct_rev(fct_reorder(state, vaccine_prop)), vaccine_prop)) +
       geom_col() +
+      ylim(c(0,100)) +
       labs(x = "State/Territory", y = str_c(vaccine_name, " in stock (%)"),
            title = str_glue("Percentage of Vaccine Providers having {vaccine_name} in stock by state")) +
       theme(plot.title = element_text(hjust = 0.5))
@@ -149,6 +150,7 @@ prop_legend_labels <- sapply(user_vaccine_types, GetDisplayName)
 vaccine_prop_table %>%
   ggplot(aes(x = state, value, fill = variable)) +
   geom_col(position = "dodge") +
+  ylim(c(0,100)) +
   labs(x = "State/Territory", y = "Percent in stock",
        title = str_glue("Vaccines in stock by State and Vaccine Type"),
        fill = "Vaccine Type") +

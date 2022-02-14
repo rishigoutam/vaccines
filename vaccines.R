@@ -8,7 +8,7 @@ library(usmap)
 df <- readRDS("./data/covid.rds")
 
 # Filters a user can pass
-# user_states <- c("WA", "CA", "OR")
+# user_states <- c("WA", "CA", "OR", "AK", "HI")
 user_states <- (sort(unique(covid$state)))
 user_vaccine_types <- c("Moderna", "Janssen", "Pfizer", "Pfizer_child")
 user_insurance_accepted <- c(TRUE)
@@ -63,6 +63,7 @@ for (vaccine_type in user_vaccine_types) {
     print(
       ggplot(data = vaccine_availability, aes(fct_rev(fct_reorder(state, vaccine_prop)), vaccine_prop)) +
       geom_col() +
+      ylim(c(0,100)) +
       labs(x = "State/Territory", y = str_c(vaccine_name, " in stock (%)"),
            title = str_glue("Percentage of Vaccine Providers having {vaccine_name} in stock by state")) +
       theme(plot.title = element_text(hjust = 0.5))
@@ -92,8 +93,9 @@ vaccine_prop_table <- reshape2::melt(vaccine_prop_table, id.vars = "state")
 prop_legend_labels <- sapply(user_vaccine_types, GetDisplayName)
 
 vaccine_prop_table %>%
-  ggplot(aes(x = state, value, fill = variable)) +
+  ggplot(aes(x = reorder(state, value), value, fill = variable)) +
   geom_col(position = "dodge") +
+  ylim(c(0,100)) +
   labs(x = "State/Territory", y = "Percent in stock",
        title = str_glue("Vaccines in stock by State and Vaccine Type"),
        fill = "Vaccine Type") +

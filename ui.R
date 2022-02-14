@@ -17,9 +17,12 @@ sidebar <- dashboardSidebar(
       menuSubItem("Data Table", tabName = "Data", icon = icon("table"))
     ),
     menuItem("Future Development", tabName = "FutureDev", icon = icon("code")),
+    menuItem("Sample Report", tabName = "SampleReport", icon = icon("file-pdf")),
     menuItem("://rishigoutam", icon = icon("github"), badgeLabel = "open",
              href = "https://www.github.com/rishigoutam/vaccines", newtab = TRUE),
-    menuItem("") # spacing
+    menuItem(""), # spacing
+    menuItem(""), # spacing
+    menuItem("")  # spacing
   ),
 
   # Show filters for the 'Maps' and 'Data' tabs only
@@ -57,6 +60,7 @@ body <- dashboardBody(
     tabItem("Data",
             withSpinner(DT::dataTableOutput("providers"), color = "#00a65a")),
     tabItem("About", includeMarkdown("./project_submission.md")),
+    tabItem("SampleReport", includeMarkdown("./sample_report.md")),
     tabItem("FutureDev", includeMarkdown("./TODO.md"))
   )
 )
