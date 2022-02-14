@@ -46,12 +46,15 @@ covid <- covid %>%
 # zip is not provided for some providers -> remove these and only store short zip
 # get only up to first five digits of zip. zip codes can be <5 characters
 # change street names to uppercase
+# TODO: currently filtering out Palau (PW) as it has one row and causing some issues with plotting
 covid <- covid %>%
   drop_na(c('longitude', 'latitude')) %>%
   mutate(street1 = str_to_upper(street1)) %>%
   mutate(street2 = str_to_upper(street2)) %>%
   mutate(city = str_to_upper(city)) %>%
   mutate(state = str_to_upper(state)) %>%
+  filter(state != "PW") %>%
+  filter(state != "GU") %>%
   filter(zip != ".") %>%
   mutate(zip = as.numeric(str_extract(zip, "[0-9]+")))
 
@@ -144,7 +147,7 @@ covid <- covid %>%
 # Create named list of states ---------------------------------------------
 
 # TODO use fips() here instead
-abbrv <- c("", sort(unique(covid$state))) # 55 states
+abbrv <- c("", sort(unique(covid$state))) # 54 states
 # see: https://en.wikipedia.org/wiki/List_of_U.S._state_and_territory_abbreviations
 state_names <- c("All",
                 "Alaska",
@@ -158,7 +161,6 @@ state_names <- c("All",
                 "Delaware",
                 "Florida",
                 "Georgia",
-                "Guam",
                 "Hawaii",
                 "Iowa",
                 "Idaho",
@@ -188,7 +190,6 @@ state_names <- c("All",
                 "Oregon",
                 "Pennsylvania",
                 "Puerto Rico",
-                "Palau",
                 "Rhode Island",
                 "South Carolina",
                 "South Dakota",
